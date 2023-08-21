@@ -12,7 +12,10 @@ public class MBridgeRevenueManager
 
 #endif
 
-
+    /// <summary>
+    /// /test test
+    /// </summary>
+    /// <param name="mBridgeRevenueParamsEntity"></param>
         public static void Track(MBridgeRevenueParamsEntity mBridgeRevenueParamsEntity)
     {
         try
