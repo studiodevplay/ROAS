@@ -66,7 +66,7 @@ static NSString *const kMTG_max_DspName = @"DspName";
 
 
 
-
+static bool debug = false;
 static bool mtg_check_nsstring(NSString *arg) {
     if (!arg || ![arg isKindOfClass:[NSString class]]
         || ![arg respondsToSelector:@selector(length)] || arg.length == 0) {
@@ -97,13 +97,17 @@ static bool mtg_check_dict(NSDictionary *arg) {
         [[MTGSDK sharedInstance] setAppID:appid ApiKey:appkey];
     
     }
-
+   void _setDebug(bool p){
+     debug=p;
+   }
     //游戏层访问SDK的接口
     void _trackAdRevenueWithAdRevenueModel(char * jsonpara)
     {
       
         if (jsonpara == NULL)
             return;
+        if(debug)
+            NSLog(@"ROAS _trackAdRevenueWithAdRevenueModel %s",jsonpara);
         NSString*string=[[NSString alloc] initWithUTF8String:jsonpara];
         
         NSData *jsonData = [string dataUsingEncoding:NSUTF8StringEncoding];

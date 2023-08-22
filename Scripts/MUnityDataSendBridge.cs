@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class MUnityDataSendBridge
 {
-    /// <summary>
-	/// /test111
-	/// </summary>
     private static MUnityDataSendBridge _instance = new MUnityDataSendBridge();
-    private readonly AndroidJavaObject _mUnityDataReceiver;
+    private readonly AndroidJavaObject _mUnityDataSend;
+    public bool isDebug = false;
+#if UNITY_IOS || UNITY_IPHONE
+    [DllImport("__Internal")]
+    private static extern void _setDebug(bool debug);
 
+#endif
     private MUnityDataSendBridge()
     {
-        if (Application.platform != RuntimePlatform.Android)
-            return;
-        _mUnityDataReceiver = new AndroidJavaObject("com.mbridge.msdk.unity.MUnityDataReceiver");
+        if (Application.platform == RuntimePlatform.Android) {
+            _mUnityDataSend = new AndroidJavaObject("com.mbridge.msdk.unity.MUnityDataReceiver");
+        }
     }
 
     public static MUnityDataSendBridge getInstance()
@@ -22,16 +25,14 @@ public class MUnityDataSendBridge
         return _instance;
     }
 
-
     public void initialize(string appID, string appKey)
     {
         try
         {
-            Debug.Log("appID:"+ appID+" appKey:"+ appKey);
             AndroidJavaObject applicationContext = getApplicationContext();
             if (applicationContext != null)
             {
-                _mUnityDataReceiver.CallStatic("initialize", applicationContext, appID, appKey);
+                _mUnityDataSend.CallStatic("initialize", applicationContext, appID, appKey);
             }
             else
             {
@@ -49,11 +50,10 @@ public class MUnityDataSendBridge
         
         try
         {
-            Debug.Log("unity trackAdJsonStr:" + trackAdJsonStr + " extraJsonStr:" + extraJsonStr);
             AndroidJavaObject applicationContext = getApplicationContext();
             if (applicationContext != null)
             {
-                _mUnityDataReceiver.CallStatic("trackAdRevenue", applicationContext, trackAdJsonStr, extraJsonStr);
+                _mUnityDataSend.CallStatic("trackAdRevenue", applicationContext, trackAdJsonStr, extraJsonStr);
             }
             else
             {
@@ -89,5 +89,22 @@ public class MUnityDataSendBridge
             Debug.LogError("Exception occurred while getting application context: " + ex.Message);
         }
         return null;
+    }
+
+    public void setDebug(bool debug)
+    {
+        try
+        {
+            isDebug = debug;
+#if UNITY_ANDROID
+            _mUnityDataSend.CallStatic("setDebug", debug);
+#elif UNITY_IOS || UNITY_IPHONE
+            _setDebug(debug);
+#endif
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Exception occurred while calling trackAdRevenue: " + ex.Message);
+        }
     }
 }

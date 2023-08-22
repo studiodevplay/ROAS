@@ -6,17 +6,15 @@ using UnityEngine;
 public class MBridgeRevenueManager
 {
     public const string MBridge_Version = "1.0.0";
+    
 #if UNITY_IOS || UNITY_IPHONE
     [DllImport("__Internal")]
     private static extern void _trackAdRevenueWithAdRevenueModel(string info);
 
 #endif
 
-    /// <summary>
-    /// /test test
-    /// </summary>
-    /// <param name="mBridgeRevenueParamsEntity"></param>
-        public static void Track(MBridgeRevenueParamsEntity mBridgeRevenueParamsEntity)
+
+   public static void Track(MBridgeRevenueParamsEntity mBridgeRevenueParamsEntity)
     {
         try
         {
@@ -64,7 +62,8 @@ public class MBridgeRevenueManager
             }
             var admobAdJson=ROSA.ThirdParty.MiniJson.Json.Serialize(dic);
 
-
+            if (MUnityDataSendBridge.getInstance().isDebug)
+                Debug.Log("ROAS  AdMob Ad JSON"+ admobAdJson);
 #if UNITY_IOS || UNITY_IPHONE
             _trackAdRevenueWithAdRevenueModel(admobAdJson);
 #elif UNITY_ANDROID
@@ -95,6 +94,8 @@ public class MBridgeRevenueManager
             else
                 dic.Add("ironSourceImpressionData", ROSA.ThirdParty.MiniJson.Json.Deserialize(mBridgeRevenueParamsEntity.ironSourceImpressionData.allData));
             var ironSourceAdJsonStr = ROSA.ThirdParty.MiniJson.Json.Serialize(dic);
+            if (MUnityDataSendBridge.getInstance().isDebug)
+                Debug.Log("ROAS  ironSource Ad JSON" + ironSourceAdJsonStr);
 #if UNITY_IOS || UNITY_IPHONE
             _trackAdRevenueWithAdRevenueModel(ironSourceAdJsonStr);
 #elif UNITY_ANDROID
@@ -156,7 +157,8 @@ public class MBridgeRevenueManager
                 dic.Add("adInfo", dicadInfo);
             }
             var maxJsonStr=ROSA.ThirdParty.MiniJson.Json.Serialize(dic);
-
+            if (MUnityDataSendBridge.getInstance().isDebug)
+                Debug.Log("ROAS  MAX Ad JSON" + maxJsonStr);
 #if UNITY_IOS || UNITY_IPHONE
             _trackAdRevenueWithAdRevenueModel(maxJsonStr);
 
