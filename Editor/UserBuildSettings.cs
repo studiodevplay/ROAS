@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
+#if UNITY_EDITOR
 public class UserBuildSettings : MonoBehaviour
 {
     private const string MTG_iOS = "Mintegral / iOS Ad Mediation/";
@@ -149,3 +149,4 @@ public class UserBuildSettings : MonoBehaviour
     }
 
 }
+#endif
