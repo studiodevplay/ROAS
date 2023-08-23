@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class MUnityDataSendBridge
 {
+    /// <summary>
+    /// 测试
+    /// </summary>
     private static MUnityDataSendBridge _instance = new MUnityDataSendBridge();
     private readonly AndroidJavaObject _mUnityDataSend;
     public bool isDebug = false;
